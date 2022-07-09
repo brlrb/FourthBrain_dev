@@ -13,7 +13,8 @@ import time
 from plotly.subplots import make_subplots
 
 # Read CSV file into pandas and extract timestamp data
-dfSentiment = pd.read_csv('../Phase_I-Proof_of_concept/TSLASentimentAnalyzer/sentiment_data.csv')
+# dfSentiment = ### YOUR LINE OF CODE HERE
+dfSentiment = pd.read_csv('sentiment_data.csv')
 dfSentiment['timestamp'] = [datetime.strptime(dt, '%Y-%m-%d') for dt in dfSentiment['timestamp'].tolist()]
 
 # Multi-select columns to build chart
@@ -24,7 +25,7 @@ r_sentiment = re.compile(".*sentiment")
 sentiment_cols = list(filter(r_sentiment.match, col_list))
 
 r_post = re.compile(".*post")
-post_list = ist(filter(r_post.match, col_list))
+post_list = list(filter(r_post.match, col_list))
 
 
 r_perc= re.compile(".*perc")
@@ -103,7 +104,7 @@ for i in range(1, len(dfSentiment)-1):
     with placeholder.container():
 
         # create columns
-        kpi1, kpi2, kpi3 = st.columns(3)
+        kpi1, kpi2 = st.columns(2)
 
         # fill in those three columns with respective metrics or KPIs
         kpi1.metric(
