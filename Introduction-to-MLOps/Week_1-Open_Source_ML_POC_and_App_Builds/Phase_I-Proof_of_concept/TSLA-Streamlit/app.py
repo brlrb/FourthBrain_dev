@@ -42,8 +42,8 @@ stocks_cols = close_list + volume_list
 
 # Config for page
 st.set_page_config(
-    page_title= 'TSLA Bot',
-    page_icon='✅',
+    page_title= 'TSLA Stock Sentiment Analyzer with Reddit comments',
+    page_icon='🚙',
     layout='wide',
 )
 
