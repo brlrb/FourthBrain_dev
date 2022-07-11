@@ -14,11 +14,14 @@ from plotly.subplots import make_subplots
 
 # Read CSV file into pandas and extract timestamp data
 # dfSentiment = ### YOUR LINE OF CODE HERE
-dfSentiment = pd.read_csv('sentiment_data.csv')
+dfSentiment = pd.read_csv('final_sentiment_data.csv')
 dfSentiment['timestamp'] = [datetime.strptime(dt, '%Y-%m-%d') for dt in dfSentiment['timestamp'].tolist()]
 
 # Multi-select columns to build chart
 col_list = dfSentiment.columns.tolist()
+
+r_ticker = re.compile(".*ticker")
+ticker_cols = list(['FORD', 'TSLA'])
 
 
 r_sentiment = re.compile(".*sentiment")
@@ -40,6 +43,9 @@ volume_list = list(filter(r_volume.match, col_list))
 sentiment_cols = sentiment_cols + post_list
 stocks_cols = close_list + volume_list
 
+
+
+
 # Config for page
 st.set_page_config(
     page_title= 'TSLA Stock Sentiment Analyzer with Reddit comments',
@@ -50,8 +56,11 @@ st.set_page_config(
 with st.sidebar:
     # FourthBrain logo to sidebar
     fourthbrain_logo = Image.open('./images/fourthbrain_logo.png')
-    st.image([fourthbrain_logo], width=300)
+    st.image([fourthbrain_logo], width=200)
 
+    # Types of Stock
+    stock_ticker_select = st.selectbox('Select Stock Ticker', ticker_cols)
+    
     # Date selection filters
     start_date_filter = st.date_input(
         'Start Date',
@@ -73,14 +82,21 @@ with st.sidebar:
 
 # Banner with TSLA and Reddit images
 tsla_logo = Image.open('./images/tsla_logo.png')
+ford_logo = Image.open('./images/ford_logo.png')
 reddit_logo = Image.open('./images/reddit_logo.png')
-st.image([tsla_logo, reddit_logo], width=200)
+
+spotlight_logo = tsla_logo if stock_ticker_select == 'TSLA' else ford_logo
+
+st.image([spotlight_logo, reddit_logo], width=150)
 
 # dashboard title
-st.title('TSLA Subreddit and Stock Price')
+st.title(stock_ticker_select + ' Subreddit and Stock Price')
 
 ## dataframe filter
 # start date
+
+dfSentiment = dfSentiment[dfSentiment['stock_ticker'] == stock_ticker_select] 
+
 dfSentiment = dfSentiment[dfSentiment['timestamp'] >= datetime(start_date_filter.year, start_date_filter.month, start_date_filter.day)]
     
 # end date
